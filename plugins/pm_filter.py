@@ -28,6 +28,8 @@ from database.gfilters_mdb import (
     get_gfilters,
     del_allg
 )
+import os
+req_channel = int(os.environ.get('REQ_CHANNEL','-1001828356211'))
 import logging
 
 logger = logging.getLogger(__name__)
@@ -1271,6 +1273,7 @@ async def auto_filter(client, msg, spoll=False):
             search = message.text
             files, offset, total_results = await get_search_results(message.chat.id ,search.lower(), offset=0, filter=True)
             if not files:
+                await client.send_message(req_channel, f"#REQUESTED_MOVIE_LOGS \n\n **MOVIE NAME : **`{search}` \n **REQUESTED BY : ** {message.from_user.first_name} \n**USER NAME : ** {message.from_user.username}", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Mark as Done", callback_data="close_data")]]))
                 if settings["spell_check"]:
                     return await advantage_spell_chok(client, msg)
                 else:
